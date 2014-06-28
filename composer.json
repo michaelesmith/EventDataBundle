@@ -1,0 +1,32 @@
+{
+    "name": "michaelesmith/event-data-bundle",
+    "description": "Allows for easy use of the EventData lib",
+    "keywords": ["event", "event data"],
+    "homepage": "https://github.com/michaelesmith/EventDataBundle",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Michael Smith",
+            "email": "sitecross@gmail.com",
+            "homepage": "http://michaelsmithonline.com/"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/michaelesmith/EventDataBundle/issues"
+    },
+    "require": {
+        "php": ">=5.4",
+        "michaelesmith/event-data": "dev-master"
+    },
+    "autoload": {
+        "psr-0": { "MS\\Bundle\\EventDataBundle": "" }
+    },
+    "target-dir": "MS/Bundle/EventDataBundle",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
+    }
+}
