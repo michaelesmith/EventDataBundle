@@ -1,0 +1,141 @@
+{% extends 'WebProfilerBundle:Profiler:layout.html.twig' %}
+
+{% block toolbar %}
+    {% set count = collector.data.events | length %}
+    {% set icon %}
+        <img width="28" height="28" alt="Event Data" style="border-width: 0; vertical-align: middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gYeACMnwMXA+QAABVlJREFUSMeVVl1sFFUU/s79mZndLWsbuxQbSnBJESEaDNhEE6DaLfqwJUZCjEBiDA9qSHhRAhrF+KYPGGOMGBN9QQ0SUJLdBhFbAhXCT1FJjDQKEQJKKdA2uNvuzM7c40NnyXbZbstJJpl7c75zZr7zS6lUu8aEMABR9s4AKHxKd6g4l2MAwEyDCVT4IqdQotBISUTFuRIjptMRZX8ynTOaxtlMdEhU0FiuVAnkGTirpUMAWNWIz4RXE3Bvb18BVaSt7REZj99vVXEuymI8yS6FSVMthsjlhv36+jmzlLJeIqIUgJZQbxDAGWazP5vt/qWjY6VNJGgGcTaUSrUrALqS/1xuxG9sbFlHRLsAxMuA5ZIHsNv33bfGx/N5pbSaJoYsqiVILjfqJxItrxPRNwAcAD3MJu37bv3Q0GXFHDwE8NsAxgC8qpT9cSQyq96YIOAJKf+oSQeZTM5X5Rfnz/d5CxYse46IPgcwAmBbJpPZYtvuRcepY9uOStcdGz10qOdIa2vyKyKxGKC1QsjrWlujWluzlbIiADzPK7hSSlFGdUCpVLtVylRjAkippePETgFYAuC1TCbzWSrV7lTLxtu3bxUTiZa5QsjdAFaU6VwDeJcx/hcjI0ND0WjcChkMZDI5v1Qa1NNzrLB48ZIOItoE4EQmk9lS5ox83zO9vX2ulGOmvj4hbTuqjh49fCuZXJgjIgtAN4B+AHMBWkckokpZx4KgWAyTimQyOV8CUAMDx922tnZHa2szgBXMvLW5ufEvIaQAQLnccDEeTzywaNHDOxsbm0dv3rx62XHqZEvLPCGE/IeZDw0O/n2AiHq0dk4Q0WMAtQshf71woX+goWGOLPFKvu/6S5euXhqJxH4CsBkAmM0ZpbQEgCAomvr6OVEp1fsANgHi26am5MLR0UGPSJDnjecLhfxwQ8NsLYSkfH70HDPvAHAfET168eKoKdWmYGbEYg1zicQeAG0APjQmWOR54zcAAjOTlLbQ2t4O4MWQ3iYhRLapaX5jsegaIiIhJnKDiCCllABfAlAIa/xOsxda21II8QqAVgBvnD37w9ZCIXcpzG0hpUQkEt0I4M2KGnxQCP2d48ScIPCDKl3GDktqfTqdXiulkgBICCEVQC8DOOX7/t7W1uUqDLBgNoFtRzsA+gTV5UnLinxq21Hb94sl2owQSgA0D8CPABqIaJ9lOWkRJoQEkAAwePDgwWta2xIAGRMEkUj8cYC+BGBhanlBa3ub48RizByE5WWuXPmjO5PJPMPMGwBcB+gdKbUWZY1g1urVqTpjAgbAV68OFMPiT0zVNUJRALYrZS33vLEStZRIzLM6Olba2Wz2MIAzABYTCRLM7APoA9BmWc6zvb19rjGBaW5eqJh5BzOvZ+bnAeyv6KcuM69h5g3MvJHZ/Km1I8r7p+uOBZ2dHTEAsdKHqCDwXSn1TiI6QEQ70+l0Q6GQ/7q398gYgH0l611dXUsBrC1z6Gez2UwNqpFKPR1xnOh2AO0ADjObQBkTwPfdY1rb7wL0HhHtikTqPurq6iptAgOZTGbZxOy8e2Ck0+l1RLQ3nByVQgCiAPLMvKNYdD0BgIpFb3xs7L8PAF4D4GcA3t0jhkwVY7WEQjvdzLxifPz2OQBGlYoVAN24ceXgyZPnpqIpqDh7ADA0dOn706d/r+l81aonLK1tUcqwO2tAXV2DDgfypOE5PPxvkZmPE9EeAJHw/jcAFI83VmKoxj5EpRWj5m5DRDQyMuj195+f9JednU9Fmdncw2LFpXkoay1SM9zIZoIJxAyAosr5XjF3dFRZMpS4r1zxixWO/AqdWphKHfwPnJFF1DJdW64AAAAASUVORK5CYII=" />
+        <span class="sf-toolbar-status {{ count ? 'sf-toolbar-status-green' : null }} {{ collector.data.flushed ? null : 'sf-toolbar-status-red' }}">{{ count }}</span>
+    {% endset %}
+    {% set text %}
+        <span>
+            {% if not collector.data.flushed %}
+                <div class="sf-toolbar-info-piece">
+                    <b>Error</b>
+                    <span>Events have not flushed</span>
+                </div>
+            {% endif %}
+            <div class="sf-toolbar-info-piece">
+                <b>Debug</b>
+                <span>
+                    {% if collector.data.debug %}
+                        <abbr title="Events where logged but not stored">on</abbr>
+                    {% else %}
+                        <abbr title="Events where logged and stored">off</abbr>
+                    {% endif %}
+                </span>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <b>Delayed</b>
+                <span>
+                    {% if collector.data.delayed %}
+                        <abbr title="Events where sent after response returned to user">on</abbr>
+                    {% else %}
+                        <abbr title="Events where sent immediately">off</abbr>
+                    {% endif %}
+                </span>
+            </div>
+            <div class="sf-toolbar-info-piece">
+                <b>Total events</b>
+                <span>
+                    {% transchoice count %}
+                        {0} No events|{1} 1 event|]1,Inf] %count% events
+                    {% endtranschoice %}
+                </span>
+            </div>
+        </span>
+    {% endset %}
+    {% include 'WebProfilerBundle:Profiler:toolbar_item.html.twig' with { 'link': profiler_url } %}
+{% endblock %}
+
+{#{% block head %}#}
+    {#&#123;&#35; if the web profiler panel needs some specific JS or CSS files &#35;&#125;#}
+{#{% endblock %}#}
+
+{% block menu %}
+    <span class="label">
+        <span class="icon">
+            <img width="28" height="28" alt="Event Data" style="border-width: 0; vertical-align: middle;" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gYeACMnwMXA+QAABVlJREFUSMeVVl1sFFUU/s79mZndLWsbuxQbSnBJESEaDNhEE6DaLfqwJUZCjEBiDA9qSHhRAhrF+KYPGGOMGBN9QQ0SUJLdBhFbAhXCT1FJjDQKEQJKKdA2uNvuzM7c40NnyXbZbstJJpl7c75zZr7zS6lUu8aEMABR9s4AKHxKd6g4l2MAwEyDCVT4IqdQotBISUTFuRIjptMRZX8ynTOaxtlMdEhU0FiuVAnkGTirpUMAWNWIz4RXE3Bvb18BVaSt7REZj99vVXEuymI8yS6FSVMthsjlhv36+jmzlLJeIqIUgJZQbxDAGWazP5vt/qWjY6VNJGgGcTaUSrUrALqS/1xuxG9sbFlHRLsAxMuA5ZIHsNv33bfGx/N5pbSaJoYsqiVILjfqJxItrxPRNwAcAD3MJu37bv3Q0GXFHDwE8NsAxgC8qpT9cSQyq96YIOAJKf+oSQeZTM5X5Rfnz/d5CxYse46IPgcwAmBbJpPZYtvuRcepY9uOStcdGz10qOdIa2vyKyKxGKC1QsjrWlujWluzlbIiADzPK7hSSlFGdUCpVLtVylRjAkippePETgFYAuC1TCbzWSrV7lTLxtu3bxUTiZa5QsjdAFaU6VwDeJcx/hcjI0ND0WjcChkMZDI5v1Qa1NNzrLB48ZIOItoE4EQmk9lS5ox83zO9vX2ulGOmvj4hbTuqjh49fCuZXJgjIgtAN4B+AHMBWkckokpZx4KgWAyTimQyOV8CUAMDx922tnZHa2szgBXMvLW5ufEvIaQAQLnccDEeTzywaNHDOxsbm0dv3rx62XHqZEvLPCGE/IeZDw0O/n2AiHq0dk4Q0WMAtQshf71woX+goWGOLPFKvu/6S5euXhqJxH4CsBkAmM0ZpbQEgCAomvr6OVEp1fsANgHi26am5MLR0UGPSJDnjecLhfxwQ8NsLYSkfH70HDPvAHAfET168eKoKdWmYGbEYg1zicQeAG0APjQmWOR54zcAAjOTlLbQ2t4O4MWQ3iYhRLapaX5jsegaIiIhJnKDiCCllABfAlAIa/xOsxda21II8QqAVgBvnD37w9ZCIXcpzG0hpUQkEt0I4M2KGnxQCP2d48ScIPCDKl3GDktqfTqdXiulkgBICCEVQC8DOOX7/t7W1uUqDLBgNoFtRzsA+gTV5UnLinxq21Hb94sl2owQSgA0D8CPABqIaJ9lOWkRJoQEkAAwePDgwWta2xIAGRMEkUj8cYC+BGBhanlBa3ub48RizByE5WWuXPmjO5PJPMPMGwBcB+gdKbUWZY1g1urVqTpjAgbAV68OFMPiT0zVNUJRALYrZS33vLEStZRIzLM6Olba2Wz2MIAzABYTCRLM7APoA9BmWc6zvb19rjGBaW5eqJh5BzOvZ+bnAeyv6KcuM69h5g3MvJHZ/Km1I8r7p+uOBZ2dHTEAsdKHqCDwXSn1TiI6QEQ70+l0Q6GQ/7q398gYgH0l611dXUsBrC1z6Gez2UwNqpFKPR1xnOh2AO0ADjObQBkTwPfdY1rb7wL0HhHtikTqPurq6iptAgOZTGbZxOy8e2Ck0+l1RLQ3nByVQgCiAPLMvKNYdD0BgIpFb3xs7L8PAF4D4GcA3t0jhkwVY7WEQjvdzLxifPz2OQBGlYoVAN24ceXgyZPnpqIpqDh7ADA0dOn706d/r+l81aonLK1tUcqwO2tAXV2DDgfypOE5PPxvkZmPE9EeAJHw/jcAFI83VmKoxj5EpRWj5m5DRDQyMuj195+f9JednU9Fmdncw2LFpXkoay1SM9zIZoIJxAyAosr5XjF3dFRZMpS4r1zxixWO/AqdWphKHfwPnJFF1DJdW64AAAAASUVORK5CYII=" />
+        </span>
+        <strong>Event Data</strong>
+        {% if collector.data.events | length %}
+            <span class="count">
+                <span>{{ collector.data.events | length }}</span>
+            </span>
+        {% endif %}
+    </span>
+{% endblock %}
+
+{% block panel %}
+    {% set count = collector.data.events | length %}
+    <h2>
+        {% transchoice count %}
+            {0} No events|{1} 1 event|]1,Inf] %count% events
+        {% endtranschoice %}
+    </h2>
+
+    {% if not collector.data.flushed %}
+        <h2>Error</h2>
+        <p>Events have not flushed / stored</p>
+    {% endif %}
+
+    <h2>Configuration</h2>
+    <table>
+        <tr>
+            <th>Debug</th>
+            {% if collector.data.debug %}
+                <td>on</td>
+                <td>Events where logged but not stored</td>
+            {% else %}
+                <td>off</td>
+                <td>Events where logged and stored</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <th>Delayed</th>
+            {% if collector.data.debug %}
+                <td>on</td>
+                <td>Events where sent after response returned to user</td>
+            {% else %}
+                <td>off</td>
+                <td>Events where sent immediately</td>
+            {% endif %}
+        </tr>
+        <tr>
+            <th>Storage</th>
+            <td colspan="2">{{ collector.data.storage }}</td>
+        </tr>
+        {% for logger in collector.data.loggers %}
+            <tr>
+                <th>{{ loop.index == 1 ? 'Loggers' : null }}</th>
+                <td colspan="2">{{ logger }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <th>Loggers</th>
+                <td colspan="2">none</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    {% for loggedEvent in collector.data.events %}
+        <h2>#{{ loop.index }}</h2>
+        <table>
+            <tr>
+                <th>Class</th>
+                <td>{{ collector.getClass(loggedEvent.event) }}</td>
+            </tr>
+            <tr>
+                <th>Collection</th>
+                <td>{{ loggedEvent.event.collection }}</td>
+            </tr>
+            <tr>
+                <th>Payload</th>
+                <td>{{ loggedEvent.event.payload | json_encode(constant('JSON_PRETTY_PRINT')) }}</td>
+            </tr>
+            <tr>
+                <th>Result</th>
+                <td>{{ (loggedEvent.result ? loggedEvent.result.data : null) | json_encode(constant('JSON_PRETTY_PRINT')) }}</td>
+            </tr>
+        </table>
+    {% endfor %}
+{% endblock %}
