@@ -4,6 +4,7 @@ namespace MS\Bundle\EventDataBundle\DataCollector;
 
 use MS\EventData\EventDataManager;
 use MS\EventData\Logger\GenericLogger;
+use MS\EventData\Storage\StorageConfigurationInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
@@ -36,11 +37,21 @@ class EventDataCollector extends DataCollector {
             $loggers[] = get_class($logger);
         }
 
+        $events = $this->eventLogger->getEvents();
+        $errors = 0;
+        foreach ($events as $event) {
+            if ($event->result && $event->result->hasError()) {
+                $errors++;
+            }
+        }
+
         $this->data = array(
             'debug' => $this->eventManager->getDebug(),
             'delayed' => $this->eventManager->getDelayed(),
-            'events' => $this->eventLogger->getEvents(),
-            'storage' => get_class($this->eventManager->getStorage()),
+            'events' => $events,
+            'errors' => $errors,
+            'storage' => get_class($storage = $this->eventManager->getStorage()),
+            'storageConfig' => $storage instanceof StorageConfigurationInterface ? $storage->getConfiguration() : null,
             'loggers' => $loggers,
             'flushed' => $this->eventManager->hasFlushed(),
         );
