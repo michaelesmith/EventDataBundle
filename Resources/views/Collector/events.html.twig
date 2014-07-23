@@ -102,7 +102,7 @@
         </tr>
         <tr>
             <th>Delayed</th>
-            {% if collector.data.debug %}
+            {% if collector.data.delayed %}
                 <td>on</td>
                 <td>Events where sent after response returned to user</td>
             {% else %}
@@ -155,7 +155,7 @@
             <tr>
                 <th>Result</th>
                 <td>
-                    {% if loggedEvent.result.hasError %}
+                    {% if loggedEvent.result and loggedEvent.result.hasError %}
                         <h3>Error</h3>
                     {% endif %}
                     <pre>{{ (loggedEvent.result ? loggedEvent.result.data : null) | json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
