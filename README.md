@@ -60,7 +60,7 @@ Example configuration
             - [setDelayed, ["@=not parameter('kernel.debug')"]]
 ```
 
-To use the keen storage you will to require the keenIO bundle"keen-io/keen-io-bundle": "~1.0". This also configures a PSRlLogger with the default logger instance. The generic logger is used by the profiler panel. The data collector is what powers the profiler panel. The event listener allows the events to be flushed to the storage after the response has been sent to the user to prevent a delay.
+To use the keen storage you will to require the keenIO bundle"keen-io/keen-io-bundle": "~1.0". This also configures a PSRLogger with the default logger instance. The generic logger is used by the profiler panel. The data collector is what powers the profiler panel. The event listener allows the events to be flushed to the storage after the response has been sent to the user to prevent a delay. For the data collector to have the response you need to use kernel.finish_request which is called just before the response is sent, in production you should use kernel.terminate which is called after the response is sent.
 
 To use it in an action you can simple do:
 
